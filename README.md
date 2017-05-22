@@ -8,9 +8,10 @@ ace-cache可以快速用于日常的spring boot应用或服务之中，快速查
 1、配置redis数据源，application.yml文件
 ```#redis-cache 相关
 redis:
-    maxActive: 300
-    maxIdle: 100
-    maxWait: 1000
+    pool:
+         maxActive: 300
+         maxIdle: 100
+         maxWait: 1000
     host: 127.0.0.1
     port: 6379
     password:
