@@ -11,8 +11,14 @@ import java.util.Set;
  */
 public interface UserService {
     public User get(String account);
+
     public List<User> getLlist();
+
     public Set<User> getSet();
-    public Map<String,User> getMap();
-    public void remove(User user);
+
+    public Map<String, User> getMap();
+
+    public void save(User user);
+
+    public User get(int age);
 }

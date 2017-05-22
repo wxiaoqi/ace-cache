@@ -12,7 +12,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @ComponentScan({"com.ace.cache"})
 @EnableAspectJAutoProxy
 public class CacheTest {
-    public static  void main(String args[]){
+    public static void main(String args[]) {
         SpringApplication app = new SpringApplication(CacheTest.class);
         app.run(args);
     }

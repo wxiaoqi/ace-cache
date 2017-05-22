@@ -18,59 +18,59 @@ import com.ace.cache.vo.CacheTree;
 @Controller
 @RequestMapping("cache")
 public class CacheRest {
-	@Autowired
-	private HttpServletRequest request;
-	@Autowired
-	private ICacheManager cacheManager;
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private ICacheManager cacheManager;
 
-	public HttpServletRequest getRequest() {
-		return request;
-	}
+    public HttpServletRequest getRequest() {
+        return request;
+    }
 
-	@RequestMapping("/list")
-	@ResponseBody
-	public List<CacheTree> listAll() {
-		return TreeUtils.buildTree(cacheManager.getAll());
-	}
+    @RequestMapping("/list")
+    @ResponseBody
+    public List<CacheTree> listAll() {
+        return TreeUtils.buildTree(cacheManager.getAll());
+    }
 
-	@RequestMapping(path = "/pre/{pre}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<CacheTree> listPre(@PathVariable("pre") String pre) {
-		return TreeUtils.buildTree(cacheManager.getByPre(pre));
-	}
+    @RequestMapping(path = "/pre/{pre}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<CacheTree> listPre(@PathVariable("pre") String pre) {
+        return TreeUtils.buildTree(cacheManager.getByPre(pre));
+    }
 
-	@RequestMapping(path = "/{key}", method = RequestMethod.GET)
-	@ResponseBody
-	public String get(@PathVariable("key") String key) {
-		return cacheManager.get(key);
-	}
+    @RequestMapping(path = "/{key}", method = RequestMethod.GET)
+    @ResponseBody
+    public String get(@PathVariable("key") String key) {
+        return cacheManager.get(key);
+    }
 
-	@RequestMapping(path = "/remove", method = { RequestMethod.DELETE })
-	@ResponseBody
-	public void removeAll() {
-		cacheManager.removeAll();
-	}
+    @RequestMapping(path = "/remove", method = {RequestMethod.DELETE})
+    @ResponseBody
+    public void removeAll() {
+        cacheManager.removeAll();
+    }
 
-	@RequestMapping(path = "/pre/{pre}", method = { RequestMethod.DELETE })
-	@ResponseBody
-	public void removePre(@PathVariable("pre") String pre) {
-		cacheManager.removeByPre(pre);
-	}
+    @RequestMapping(path = "/pre/{pre}", method = {RequestMethod.DELETE})
+    @ResponseBody
+    public void removePre(@PathVariable("pre") String pre) {
+        cacheManager.removeByPre(pre);
+    }
 
-	@RequestMapping(path = "/{key}", method = RequestMethod.DELETE)
-	@ResponseBody
-	public void removeKey(@PathVariable("key") String key) {
-		cacheManager.remove(key);
-	}
+    @RequestMapping(path = "/{key}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void removeKey(@PathVariable("key") String key) {
+        cacheManager.remove(key);
+    }
 
-	@RequestMapping(path="/{key}",method=RequestMethod.PUT)
-	@ResponseBody
-	public void updateTime(@PathVariable("key") String key,int hour){
-		cacheManager.update(key, hour);
-	}
+    @RequestMapping(path = "/{key}", method = RequestMethod.PUT)
+    @ResponseBody
+    public void updateTime(@PathVariable("key") String key, int hour) {
+        cacheManager.update(key, hour);
+    }
 
-	@RequestMapping("")
-	public String index(){
-		return "/static/cache/index.html";
-	}
+    @RequestMapping("")
+    public String index() {
+        return "/static/cache/index.html";
+    }
 }

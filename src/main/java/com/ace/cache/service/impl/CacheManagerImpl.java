@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.ace.cache.service.impl;
 
@@ -20,8 +20,8 @@ import com.ace.cache.service.ICacheManager;
 import com.ace.cache.vo.CacheTree;
 
 /**
- * 
  * 解决问题：
+ *
  * @author Ace
  * @version 1.0
  * @date 2017年5月3日
@@ -29,121 +29,120 @@ import com.ace.cache.vo.CacheTree;
  */
 @Service
 public class CacheManagerImpl implements ICacheManager {
-	@Autowired
-	private Environment env;
-	@Autowired
-	private CacheAPI cacheAPI;
-	/**
-	 * 
-	 */
-	public CacheManagerImpl() {
-		
-	}
+    @Autowired
+    private Environment env;
+    @Autowired
+    private CacheAPI cacheAPI;
 
-	@Override
-	public void removeAll() {
-		cacheAPI.removeByPre("");
-	}
+    /**
+     *
+     */
+    public CacheManagerImpl() {
 
-	@Override
-	public void remove(String key) {
-		cacheAPI.remove(key);
-	}
+    }
 
-	@Override
-	public void remove(List<CacheBean> caches) {
-		String[] keys = new String[caches.size()];
-		int i = 0;
-		for(CacheBean cache:caches){
-			keys[i] = cache.getKey();
-			i++;
-		}
-		cacheAPI.remove(keys);
-	}
+    @Override
+    public void removeAll() {
+        cacheAPI.removeByPre("");
+    }
 
-	@Override
-	public void removeByPre(String pre) {
-		if(!pre.contains(env.getProperty(CacheConstants.REDIS_SYS_NAME))){
-			pre = env.getProperty(CacheConstants.REDIS_SYS_NAME)+"_*"+pre;
-		}
-		cacheAPI.removeByPre(pre);
-	}
+    @Override
+    public void remove(String key) {
+        cacheAPI.remove(key);
+    }
 
-	@Override
-	public List<CacheTree> getAll() {
-		List<CacheBean> caches = cacheAPI.listAll();
-		List<CacheTree> cts = toTree(caches);
-		return cts;
-	}
+    @Override
+    public void remove(List<CacheBean> caches) {
+        String[] keys = new String[caches.size()];
+        int i = 0;
+        for (CacheBean cache : caches) {
+            keys[i] = cache.getKey();
+            i++;
+        }
+        cacheAPI.remove(keys);
+    }
 
-	/**
-	 * 
-	 * @param caches
-	 * @return
-	 * @author Ace
-	 * @date 2017年5月11日
-	 */
-	private List<CacheTree> toTree(List<CacheBean> caches) {
-		List<CacheTree> result = new ArrayList<CacheTree>();
-		Set<CacheTree> cts = new HashSet<CacheTree>();
-		CacheTree ct = new CacheTree();
-		for(CacheBean cache:caches){
-			String[] split = cache.getKey().split(":");
-			for(int i=split.length-1;i>0;i--)
-			{	
-				if(i==split.length-1){
-					ct = new CacheTree(cache);
-				}else{
-					ct = new CacheTree();
-				}
-				if(i-1>=0){
-					ct.setId(split[i]);
-					ct.setParentId(split[i-1].endsWith(env.getProperty(CacheConstants.REDIS_SYS_NAME))?"-1":split[i-1]);
-				}
-				if(split.length==2){
-					cts.remove(ct);
-				}
-				cts.add(ct);
-			}
-		}
-		result.addAll(cts);
-		return result;
-	}
-	
-	@Override
-	public List<CacheTree> getByPre(String pre) {
-		if(StringUtils.isBlank(pre))
-			return getAll();
-		if(!pre.contains(env.getProperty(CacheConstants.REDIS_SYS_NAME))){
-			pre = env.getProperty(CacheConstants.REDIS_SYS_NAME)+"*"+pre;
-		}
-		return toTree(cacheAPI.getCacheBeanByPre(pre));
-	}
+    @Override
+    public void removeByPre(String pre) {
+        if (!pre.contains(env.getProperty(CacheConstants.REDIS_SYS_NAME))) {
+            pre = env.getProperty(CacheConstants.REDIS_SYS_NAME) + "_*" + pre;
+        }
+        cacheAPI.removeByPre(pre);
+    }
 
-	public CacheAPI getCacheAPI() {
-		return cacheAPI;
-	}
+    @Override
+    public List<CacheTree> getAll() {
+        List<CacheBean> caches = cacheAPI.listAll();
+        List<CacheTree> cts = toTree(caches);
+        return cts;
+    }
 
-	public void setCacheAPI(CacheAPI cacheAPI) {
-		this.cacheAPI = cacheAPI;
-	}
+    /**
+     * @param caches
+     * @return
+     * @author Ace
+     * @date 2017年5月11日
+     */
+    private List<CacheTree> toTree(List<CacheBean> caches) {
+        List<CacheTree> result = new ArrayList<CacheTree>();
+        Set<CacheTree> cts = new HashSet<CacheTree>();
+        CacheTree ct = new CacheTree();
+        for (CacheBean cache : caches) {
+            String[] split = cache.getKey().split(":");
+            for (int i = split.length - 1; i > 0; i--) {
+                if (i == split.length - 1) {
+                    ct = new CacheTree(cache);
+                } else {
+                    ct = new CacheTree();
+                }
+                if (i - 1 >= 0) {
+                    ct.setId(split[i]);
+                    ct.setParentId(split[i - 1].endsWith(env.getProperty(CacheConstants.REDIS_SYS_NAME)) ? "-1" : split[i - 1]);
+                }
+                if (split.length == 2) {
+                    cts.remove(ct);
+                }
+                cts.add(ct);
+            }
+        }
+        result.addAll(cts);
+        return result;
+    }
 
-	@Override
-	public void update(String key, int hour) {
-		String value = cacheAPI.get(key);
-		cacheAPI.set(key, value, hour*60);
-	}
+    @Override
+    public List<CacheTree> getByPre(String pre) {
+        if (StringUtils.isBlank(pre))
+            return getAll();
+        if (!pre.contains(env.getProperty(CacheConstants.REDIS_SYS_NAME))) {
+            pre = env.getProperty(CacheConstants.REDIS_SYS_NAME) + "*" + pre;
+        }
+        return toTree(cacheAPI.getCacheBeanByPre(pre));
+    }
 
-	@Override
-	public void update(List<CacheBean> caches, int hour) {
-		for(CacheBean cache:caches){
-			String value = cacheAPI.get(cache.getKey());
-			cacheAPI.set(cache.getKey(), value, hour);
-		}
-	}
+    public CacheAPI getCacheAPI() {
+        return cacheAPI;
+    }
 
-	@Override
-	public String get(String key) {
-		return cacheAPI.get(key);
-	}
+    public void setCacheAPI(CacheAPI cacheAPI) {
+        this.cacheAPI = cacheAPI;
+    }
+
+    @Override
+    public void update(String key, int hour) {
+        String value = cacheAPI.get(key);
+        cacheAPI.set(key, value, hour * 60);
+    }
+
+    @Override
+    public void update(List<CacheBean> caches, int hour) {
+        for (CacheBean cache : caches) {
+            String value = cacheAPI.get(cache.getKey());
+            cacheAPI.set(cache.getKey(), value, hour);
+        }
+    }
+
+    @Override
+    public String get(String key) {
+        return cacheAPI.get(key);
+    }
 }

@@ -22,8 +22,10 @@ redis:
 ```
 ## 缓存开启
 2、开启AOP扫描
+```
 @ComponentScan({"com.ace.cache"})
 @EnableAspectJAutoProxy
+```
 ## 缓存使用
 3、在Service上进行@Cache注解或@CacheClear注解
 # 注解说明
@@ -51,3 +53,7 @@ generator      | Class<? extends IKeyGenerator> |  缓存键值自定义生成�
 访问地址：http://localhost:8080/cache
 <br>管理端批量或前缀清除ace-cache注册的缓存，同时也可以快速预览缓存的数据内容，也可以对缓存的失效时间进行延长。
 ![img](http://ofsc32t59.bkt.clouddn.com/17-05-22/1495418425204.jpg)
+# Demo
+1、在src/main/test中展开的相关示例代码
+>CacheTest是核心启动类
+>>service包是缓存调用例子，包含自定义表达式和结果解析、注解的使用

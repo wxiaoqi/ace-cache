@@ -1,6 +1,7 @@
 package com.ace.cache.test.unit;
 
 import com.ace.cache.test.CacheTest;
+import com.ace.cache.test.entity.User;
 import com.ace.cache.test.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,19 +17,38 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class UserServiceTest {
     @Autowired
     private UserService userService;
+
     @Test
-    public void testGetUser(){
+    public void testGetUser() {
         userService.get("test");
         userService.get("test");
     }
+
     @Test
-    public void testGetList(){
+    public void testGetList() {
         userService.getLlist();
         userService.getLlist();
     }
+
     @Test
-    public void testGetSet(){
+    public void testGetSet() {
         userService.getSet();
         userService.getSet();
+    }
+
+    @Test
+    public void testGetMap(){
+        userService.getMap();
+        userService.getMap();
+    }
+    @Test
+    public void testSave(){
+        userService.save(new User("ace",25,"ace"));
+    }
+
+    @Test
+    public void testByKeyGenerator(){
+        userService.get(28);
+        userService.get(28);
     }
 }
