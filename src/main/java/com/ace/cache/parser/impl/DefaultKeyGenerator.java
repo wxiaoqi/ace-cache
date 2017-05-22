@@ -15,7 +15,7 @@ import com.ace.cache.parser.IKeyGenerator;
 @Service
 public class DefaultKeyGenerator extends IKeyGenerator {
 
-//	@Autowired
+	@Autowired(required = false)
 	private IUserKeyGenerator userKeyGenerator;
 
 	@Override
