@@ -1,7 +1,8 @@
 # ace-cache
 基于spring boot上的注解缓存，自带轻量级缓存管理页面。
-@Cache比spring cache更轻量的缓存，采用fastjson序列化与反序列化，以json串存于缓存之中。
-ace-cache可以快速用于日常的spring boot应用或服务之中，快速查看到缓存的状态。
+@Cache比spring cache更轻量的缓存，支持单个缓存设置过期时间，可以根据前缀移除缓存。
+采用fastjson序列化与反序列化，以json串存于缓存之中。
+ace-cache可以快速用于日常的spring boot应用之中。
 
 # 使用手册
 ## 缓存配置
@@ -59,3 +60,5 @@ generator      | Class<? extends IKeyGenerator> |  缓存键值自定义生成�
 1、在src/main/test中展开的相关示例代码
 >CacheTest是核心启动类
 >>service包是缓存调用例子，包含自定义表达式和结果解析、注解的使用
+# 2017年5月22日
+初次与大家见面，请多多指教！
