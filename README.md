@@ -6,7 +6,8 @@ ace-cache可以快速用于日常的spring boot应用或服务之中，快速查
 # 使用手册
 ## 缓存配置
 1、配置redis数据源，application.yml文件
-```#redis-cache 相关
+```
+#redis-cache 相关
 redis:
     pool:
          maxActive: 300
