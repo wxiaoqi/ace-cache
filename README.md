@@ -8,7 +8,7 @@ ace-cache可以快速用于日常的spring boot应用之中。<br>
 ## Maven依赖
 ```
 <dependency>
-    <groupId>com.ace</groupId>
+    <groupId>com.github.wxiaoqi</groupId>
     <artifactId>ace-cache</artifactId>
     <version>0.0.1</version>
 </dependency>
