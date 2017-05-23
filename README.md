@@ -5,6 +5,14 @@
 ace-cache可以快速用于日常的spring boot应用之中。<br>
 
 # 使用手册
+## Maven依赖
+```
+<dependency>
+    <groupId>com.ace</groupId>
+    <artifactId>ace-cache</artifactId>
+    <version>0.0.1</version>
+</dependency>
+```
 ## 缓存配置
 1、配置redis数据源，application.yml文件
 ```
@@ -97,8 +105,8 @@ xsi:schemaLocation="
 ##### maven依赖
 ```
 <properties>
-		<!-- spring -->
-		<spring.version>4.1.3.RELEASE</spring.version>
+    <!-- spring -->
+    <spring.version>4.1.3.RELEASE</spring.version>
 <properties>
 <dependencies>
     <dependency>
