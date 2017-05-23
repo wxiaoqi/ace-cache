@@ -5,6 +5,15 @@
     <artifactId>ace-cache</artifactId>
     <version>0.0.1</version>
     <name>ace-cache</name>
+    <url>https://github.com/wxiaoqi/ace-cache</url>
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -57,6 +66,18 @@
             <version>3.1.0</version>
         </dependency>
     </dependencies>
+    <scm>
+        <connection>scm:git:https://github.com/wxiaoqi/ace-cache.git</connection>
+        <developerConnection>scm:git:https://github.com/wxiaoqi/ace-cache.git</developerConnection>
+        <url>https://github.com/wxiaoqi/ace-cache</url>
+        <tag>0.0.1</tag>
+    </scm>
+    <developers>
+        <developer>
+            <name>ace</name>
+            <email>463540703@qq.com</email>
+        </developer>
+    </developers>
 
     <build>
         <plugins>
