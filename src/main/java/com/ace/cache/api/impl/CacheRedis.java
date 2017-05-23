@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ace.cache.api.CacheAPI;
+import com.ace.cache.config.RedisConfig;
 import com.ace.cache.constants.CacheConstants;
 import com.ace.cache.entity.CacheBean;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +32,7 @@ import com.ace.cache.service.IRedisService;
 @Service
 public class CacheRedis implements CacheAPI {
     @Autowired
-    private Environment env;
+    private RedisConfig redisConfig;
 
     @Autowired
     private IRedisService redisCacheService;
@@ -131,7 +132,7 @@ public class CacheRedis implements CacheAPI {
     @Override
     public String addSys(String key) {
         String result = key;
-        String sys = env.getProperty("redis.sysName");
+        String sys = redisConfig.getSysName();
         if (key.startsWith(sys))
             result = key;
         else
@@ -213,6 +214,6 @@ public class CacheRedis implements CacheAPI {
 
     @Override
     public boolean isEnabled() {
-        return env.getProperty("redis.enable", Boolean.class);
+        return Boolean.parseBoolean(redisConfig.getEnable());
     }
 }

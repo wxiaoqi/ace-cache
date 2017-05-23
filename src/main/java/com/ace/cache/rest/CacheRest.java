@@ -19,13 +19,7 @@ import com.ace.cache.vo.CacheTree;
 @RequestMapping("cache")
 public class CacheRest {
     @Autowired
-    private HttpServletRequest request;
-    @Autowired
     private ICacheManager cacheManager;
-
-    public HttpServletRequest getRequest() {
-        return request;
-    }
 
     @RequestMapping("/list")
     @ResponseBody

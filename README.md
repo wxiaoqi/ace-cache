@@ -60,5 +60,83 @@ generator      | Class<? extends IKeyGenerator> |  缓存键值自定义生成�
 1、在src/main/test中展开的相关示例代码
 >CacheTest是核心启动类
 >>service包是缓存调用例子，包含自定义表达式和结果解析、注解的使用
-# 2017年5月22日
+
+# 2017年5月22日 
 初次与大家见面，请多多指教！
+
+# 2017年5月23日 兼容spring mvc模式
+
+## 配置文文件
+##### application.properties
+```
+redis.pool.maxActive = 300
+redis.pool.maxIdle = 100
+redis.pool.maxWait = 1000
+redis.host = 127.0.0.1
+redis.port = 6379
+redis.password = 
+redis.timeout = 2000
+redis.database = 0
+redis.sysName = ace
+redis.enable = true
+```
+##### applicationContext.xml
+```
+<!-- beans 头部-->
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	http://www.springframework.org/schema/context  
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd"	
+<!-- 开启AOP配置 -->	
+<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+<context:component-scan base-package="com.ace.cache"/>
+<context:annotation-config/> 
+```
+##### maven依赖
+```
+<properties>
+		<!-- spring -->
+		<spring.version>4.1.3.RELEASE</spring.version>
+<properties>
+<dependencies>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-core</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-beans</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-context</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-context-support</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-aspects</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-webmvc</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.aspectj</groupId>
+    	<artifactId>aspectjrt</artifactId>
+    	<version>${aspectj.version}</version>
+    </dependency>
+</dependencies>
+```
+## 使用方式
+使用方式与spring boot的方式一样，在方法上直接注解即可。
