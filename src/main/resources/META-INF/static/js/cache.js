@@ -23,6 +23,10 @@ $(function () {
         if ($('#expireHour').val() == "") {
             alert("Please input the number!");
         }
+        if($('#expireTime').text()==""){
+            $('#updateModal').modal('hide');
+            return;
+        }
         $.ajax({
             type: 'PUT',
             url: "/cache/" + $('#key').text(),
@@ -61,6 +65,7 @@ function init() {
                 onNodeSelected: function (event, node) {
                     clear();
                     if (node.key == "") {
+                        $('#key').prepend('<p>' + node.text + '</p>');
                         return;
                     }
                     $('#key').prepend('<p>' + node.key + '</p>');

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ace.cache.api.CacheAPI;
+import com.ace.cache.config.RedisConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -33,7 +34,8 @@ public class CacheManagerImpl implements ICacheManager {
     private Environment env;
     @Autowired
     private CacheAPI cacheAPI;
-
+    @Autowired
+    private RedisConfig redisConfig;
     /**
      *
      */
@@ -64,8 +66,8 @@ public class CacheManagerImpl implements ICacheManager {
 
     @Override
     public void removeByPre(String pre) {
-        if (!pre.contains(env.getProperty(CacheConstants.REDIS_SYS_NAME))) {
-            pre = env.getProperty(CacheConstants.REDIS_SYS_NAME) + "_*" + pre;
+        if (!pre.contains(redisConfig.getSysName())) {
+            pre = redisConfig.getSysName()+ ":" + pre+"*";
         }
         cacheAPI.removeByPre(pre);
     }
@@ -97,7 +99,7 @@ public class CacheManagerImpl implements ICacheManager {
                 }
                 if (i - 1 >= 0) {
                     ct.setId(split[i]);
-                    ct.setParentId(split[i - 1].endsWith(env.getProperty(CacheConstants.REDIS_SYS_NAME)) ? "-1" : split[i - 1]);
+                    ct.setParentId(split[i - 1].endsWith(redisConfig.getSysName()) ? "-1" : split[i - 1]);
                 }
                 if (split.length == 2) {
                     cts.remove(ct);
@@ -113,8 +115,8 @@ public class CacheManagerImpl implements ICacheManager {
     public List<CacheTree> getByPre(String pre) {
         if (StringUtils.isBlank(pre))
             return getAll();
-        if (!pre.contains(env.getProperty(CacheConstants.REDIS_SYS_NAME))) {
-            pre = env.getProperty(CacheConstants.REDIS_SYS_NAME) + "*" + pre;
+        if (!pre.contains(redisConfig.getSysName())) {
+            pre = redisConfig.getSysName() + "*" + pre;
         }
         return toTree(cacheAPI.getCacheBeanByPre(pre));
     }
