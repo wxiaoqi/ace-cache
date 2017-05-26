@@ -41,6 +41,9 @@ public class CacheRedis implements CacheAPI {
     public String get(String key) {
         if (!isEnabled())
             return null;
+        if(StringUtils.isBlank(key)){
+            return null;
+        }
         CacheBean cache = getCacheBean(key);
         if (cache != null) {
             if (cache.getExpireTime().getTime() > new Date().getTime()) {
@@ -61,7 +64,9 @@ public class CacheRedis implements CacheAPI {
     @Override
     public Long remove(String key) {
         if (!isEnabled())
-            return null;
+            return 0L;
+        if(StringUtils.isBlank(key))
+            return 0L;
         try {
             CacheBean cache = getCacheBean(key);
             if (cache != null) {
@@ -91,7 +96,9 @@ public class CacheRedis implements CacheAPI {
     @Override
     public Long removeByPre(String pre) {
         if (!isEnabled())
-            return null;
+            return 0L;
+        if(StringUtils.isBlank(pre))
+            return 0L;
         try {
             Set<String> result = redisCacheService.getByPre(addSys(pre));
             List<String> list = new ArrayList<String>();
@@ -191,6 +198,9 @@ public class CacheRedis implements CacheAPI {
 
     @Override
     public List<CacheBean> getCacheBeanByPre(String pre) {
+        if(StringUtils.isBlank(pre)){
+            return new ArrayList<CacheBean>();
+        }
         Set<String> result = redisCacheService.getByPre(pre);
         Iterator<String> it = result.iterator();
         List<CacheBean> caches = new ArrayList<CacheBean>();

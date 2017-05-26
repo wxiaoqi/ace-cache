@@ -36,7 +36,7 @@ public class DefaultKeyGenerator extends IKeyGenerator {
                     value = result.get(0);
                 }
                 if (value == null || value.equals("null"))
-                    return "";
+                    value = "";
                 if (express.length > 1) {
                     String field = express[1];
                     value = ReflectionUtils.getFieldValue(value, field);
