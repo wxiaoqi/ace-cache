@@ -45,7 +45,7 @@ public class CacheManagerImpl implements ICacheManager {
 
     @Override
     public void removeAll() {
-        cacheAPI.removeByPre("");
+        cacheAPI.removeByPre(redisConfig.getSysName());
     }
 
     @Override
