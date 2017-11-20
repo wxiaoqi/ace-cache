@@ -10,7 +10,7 @@ ace-cache可以快速用于日常的spring boot应用之中。<br>
 <dependency>
     <groupId>com.github.wxiaoqi</groupId>
     <artifactId>ace-cache</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 ## 缓存配置
@@ -27,15 +27,14 @@ redis:
     password:
     timeout: 2000
     # 服务或应用名
-    sysname: ace
+    sysName: ace
     enable: true
     database: 0
 ```
 ## 缓存开启
 2、开启AOP扫描
 ```
-@ComponentScan({"com.ace.cache"})
-@EnableAspectJAutoProxy
+@EnableAceCache
 ```
 ## 缓存使用
 3、在Service上进行@Cache注解或@CacheClear注解
