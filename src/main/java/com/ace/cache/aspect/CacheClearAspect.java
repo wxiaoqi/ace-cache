@@ -1,15 +1,12 @@
 package com.ace.cache.aspect;
 
-import java.lang.reflect.Method;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.ace.cache.annotation.CacheClear;
 import com.ace.cache.api.CacheAPI;
 import com.ace.cache.constants.CacheScope;
 import com.ace.cache.parser.IKeyGenerator;
 import com.ace.cache.parser.impl.DefaultKeyGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,6 +14,9 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 清除缓存注解拦截
@@ -28,12 +28,12 @@ import org.springframework.stereotype.Service;
  */
 @Aspect
 @Service
+@Slf4j
 public class CacheClearAspect {
     @Autowired
     private IKeyGenerator keyParser;
     @Autowired
     private CacheAPI cacheAPI;
-    protected Logger log = Logger.getLogger(this.getClass());
     private ConcurrentHashMap<String, IKeyGenerator> generatorMap = new ConcurrentHashMap<String, IKeyGenerator>();
 
     @Pointcut("@annotation(com.ace.cache.annotation.CacheClear)")
