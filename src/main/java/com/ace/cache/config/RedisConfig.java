@@ -29,6 +29,9 @@ public class RedisConfig {
     private String enable;
     private String sysName;
 
+
+    private String userKey;
+
     @PostConstruct
     public void  init(){
         PropertiesLoaderUtils prop = new PropertiesLoaderUtils("application.properties");
@@ -55,6 +58,7 @@ public class RedisConfig {
             sysName = prop.getProperty("redis.sysName");
             enable = prop.getProperty("redis.enable");
         }
+        userKey= prop.getProperty("redis.userkey");
     }
 
     @Bean
@@ -167,5 +171,13 @@ public class RedisConfig {
 
     public void setPort(String port) {
         this.port = port;
+    }
+
+    public String getUserKey() {
+        return userKey;
+    }
+
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
     }
 }

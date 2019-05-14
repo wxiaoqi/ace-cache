@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cache(key = "user:list")
     public List<User> getLlist() {
+        System.out.println("从方法内读取....");
         log.debug("从方法内读取....");
         List<User> users = new ArrayList<User>();
         for (int i = 0; i < 20; i++) {

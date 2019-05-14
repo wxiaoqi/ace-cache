@@ -4,16 +4,25 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.ace.cache.config.RedisConfig;
 import com.ace.cache.parser.IUserKeyGenerator;
 import com.ace.cache.utils.ReflectionUtils;
 import com.ace.cache.constants.CacheScope;
+import com.ace.cache.utils.WebUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ace.cache.parser.IKeyGenerator;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class DefaultKeyGenerator extends IKeyGenerator {
+    @Autowired
+    RedisConfig redisConfig;
 
     @Autowired(required = false)
     private IUserKeyGenerator userKeyGenerator;
@@ -46,6 +55,17 @@ public class DefaultKeyGenerator extends IKeyGenerator {
                 } else {
                     key = key.replace("{" + tmp + "}", LINK + value.toString());
                 }
+            }
+        }
+        if (CacheScope.user.equals(scope) && StringUtils.isNotBlank(redisConfig.getUserKey())){
+            ServletRequestAttributes servletContainer = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = servletContainer.getRequest();
+            String accessToken = request.getHeader(redisConfig.getUserKey());
+            if(StringUtils.isBlank(accessToken)){
+                accessToken = WebUtil.getCookieValue(request,redisConfig.getUserKey());
+            }
+            if (StringUtils.isNotBlank(accessToken)){
+                key = key + accessToken;
             }
         }
         return key;
