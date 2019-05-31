@@ -21,6 +21,14 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private Logger log = Logger.getLogger(UserServiceImpl.class);
 
+    /**
+     * 此方法第一次调用的时候会走方法内部，并且将返回值以缓存形式存在redis中
+     * 存储的数据为 key: user:account  value为实体类user
+     * 第二次调用时会先从缓存中判断key所对应的value有没有值,有的话直接拿缓存的数据
+     * 不走方法内,没有的话继续走方法内
+     * @param account
+     * @return
+     */
     @Override
     @Cache(key = "user{1}")
     public User get(String account) {
