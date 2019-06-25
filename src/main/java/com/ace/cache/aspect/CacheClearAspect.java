@@ -56,7 +56,7 @@ public class CacheClearAspect {
             key = getKey(anno, anno.pre(), CacheScope.application,
                     parameterTypes, arguments);
             cacheAPI.removeByPre(key);
-        } else if (anno.keys().length > 1) {
+        } else if (anno.keys().length >= 1) {
             for (String tmp : anno.keys()) {
                 tmp = getKey(anno, tmp, CacheScope.application, parameterTypes,
                         arguments);
