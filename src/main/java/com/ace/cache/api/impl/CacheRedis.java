@@ -101,6 +101,9 @@ public class CacheRedis implements CacheAPI {
             return 0L;
         try {
             Set<String> result = redisCacheService.getByPre(addSys(pre));
+            if(null == result){
+                return 0L;
+            }
             List<String> list = new ArrayList<String>();
             for (String key : result) {
                 CacheBean cache = getCacheBean(key);
