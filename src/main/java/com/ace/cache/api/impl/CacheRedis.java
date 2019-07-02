@@ -101,7 +101,7 @@ public class CacheRedis implements CacheAPI {
             return 0L;
         try {
             Set<String> result = redisCacheService.getByPre(addSys(pre));
-            if(null == result){
+            if(null == result || result.isEmpty()){
                 return 0L;
             }
             List<String> list = new ArrayList<String>();

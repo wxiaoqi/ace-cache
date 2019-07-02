@@ -89,7 +89,7 @@ public class CacheAspect {
         if (anno.generator().equals(DefaultKeyGenerator.class)) {
             keyGenerator = keyParser;
         } else {
-            if (generatorMap.contains(generatorClsName)) {
+            if (generatorMap.containsKey(generatorClsName)) {
                 keyGenerator = generatorMap.get(generatorClsName);
             } else {
                 keyGenerator = anno.generator().newInstance();

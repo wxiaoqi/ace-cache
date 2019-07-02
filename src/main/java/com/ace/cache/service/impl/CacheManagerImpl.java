@@ -86,7 +86,7 @@ public class CacheManagerImpl implements ICacheManager {
     private List<CacheTree> toTree(List<CacheBean> caches) {
         List<CacheTree> result = new ArrayList<CacheTree>();
         Set<CacheTree> cts = new HashSet<CacheTree>();
-        CacheTree ct = new CacheTree();
+        CacheTree ct ;//= new CacheTree();
         for (CacheBean cache : caches) {
             String[] split = cache.getKey().split(":");
             for (int i = split.length - 1; i > 0; i--) {

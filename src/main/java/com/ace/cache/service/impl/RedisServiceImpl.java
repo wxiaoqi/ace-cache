@@ -90,7 +90,7 @@ public class RedisServiceImpl implements IRedisService {
                 String keyStr = it.next();
                 jedis.del(keyStr);
             }
-            return new Long(result);
+            return Long.valueOf(result);
         } catch (Exception e) {
             log.error(e.getMessage());
             return 0L;
