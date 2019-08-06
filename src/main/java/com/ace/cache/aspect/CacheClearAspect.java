@@ -62,7 +62,7 @@ public class CacheClearAspect {
             for (String tmp : anno.keys()) {
                 tmp = getKey(anno, tmp, CacheScope.application, parameterTypes,
                         arguments);
-                log.debug("redis remove key pre : " + key);
+                log.debug("redis remove key pre : " + tmp);
                 cacheAPI.removeByPre(tmp);
             }
         }

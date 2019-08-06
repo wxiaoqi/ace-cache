@@ -32,7 +32,7 @@ public class DefaultKeyGenerator extends IKeyGenerator {
         boolean isFirst = true;
         if (key.indexOf("{") > 0) {
             key = key.replace("{", ":{");
-            Pattern pattern = Pattern.compile("\\d+\\.?[\\w]*");
+            Pattern pattern = Pattern.compile("\\d+(\\.?[\\w]+)*");
             Matcher matcher = pattern.matcher(key);
             while (matcher.find()) {
                 String tmp = matcher.group();
@@ -47,8 +47,10 @@ public class DefaultKeyGenerator extends IKeyGenerator {
                 if (value == null || value.equals("null"))
                     value = "";
                 if (express.length > 1) {
-                    String field = express[1];
-                    value = ReflectionUtils.getFieldValue(value, field);
+                    for (int idx = 1; idx < express.length; idx ++) {
+                        String field = express[idx];
+                        value = ReflectionUtils.getFieldValue(value, field);
+                    }
                 }
                 if (isFirst) {
                     key = key.replace("{" + tmp + "}", value.toString());
