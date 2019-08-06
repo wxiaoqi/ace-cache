@@ -54,6 +54,7 @@ public class CacheAspect {
         String value = "";
         try {
             key = getKey(anno, parameterTypes, arguments);
+            log.debug("redis get key : " + key);
             value = cacheAPI.get(key);
             Type returnType = method.getGenericReturnType();
             result = getResult(anno, result, value, returnType);
@@ -63,6 +64,7 @@ public class CacheAspect {
             if (result == null) {
                 result = invocation.proceed();
                 if (StringUtils.isNotBlank(key)) {
+                    log.debug("redis set key : " + key);
                     cacheAPI.set(key, result, anno.expire());
                 }
             }

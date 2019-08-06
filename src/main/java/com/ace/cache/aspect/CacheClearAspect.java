@@ -51,15 +51,18 @@ public class CacheClearAspect {
         if (StringUtils.isNotBlank(anno.key())) {
             key = getKey(anno, anno.key(), CacheScope.application,
                     parameterTypes, arguments);
+            log.debug("redis remove key : " + key);
             cacheAPI.remove(key);
         } else if (StringUtils.isNotBlank(anno.pre())) {
             key = getKey(anno, anno.pre(), CacheScope.application,
                     parameterTypes, arguments);
+            log.debug("redis remove key pre : " + key);
             cacheAPI.removeByPre(key);
         } else if (anno.keys().length >= 1) {
             for (String tmp : anno.keys()) {
                 tmp = getKey(anno, tmp, CacheScope.application, parameterTypes,
                         arguments);
+                log.debug("redis remove key pre : " + key);
                 cacheAPI.removeByPre(tmp);
             }
         }
