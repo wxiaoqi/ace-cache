@@ -32,6 +32,9 @@ public class RedisConfig {
 
     private String userKey;
 
+    private Long refreshTimeout;
+
+
     @PostConstruct
     public void  init(){
         PropertiesLoaderUtils prop = new PropertiesLoaderUtils("application.properties");
@@ -59,6 +62,17 @@ public class RedisConfig {
             enable = prop.getProperty("redis.enable");
         }
         userKey= prop.getProperty("redis.userkey");
+
+        String refreshTimeoutStr = env.getProperty("redis.cache.refreshTimeout");
+        if (StringUtils.isBlank(refreshTimeoutStr)){
+            refreshTimeoutStr = prop.getProperty("redis.cache.refreshTimeout");
+        }
+        if (StringUtils.isNotBlank(refreshTimeoutStr)){
+            refreshTimeout = Long.parseLong(refreshTimeoutStr.trim());
+        }
+        else {
+            refreshTimeout = 0L;
+        }
     }
 
     @Bean
@@ -179,5 +193,8 @@ public class RedisConfig {
 
     public void setUserKey(String userKey) {
         this.userKey = userKey;
+    }
+    public Long getRefreshTimeout(){
+        return this.refreshTimeout;
     }
 }
