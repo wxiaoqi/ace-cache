@@ -5,6 +5,7 @@ import com.ace.cache.api.CacheAPI;
 import com.ace.cache.parser.ICacheResultParser;
 import com.ace.cache.parser.IKeyGenerator;
 import com.ace.cache.parser.impl.DefaultKeyGenerator;
+import com.ace.cache.utils.CacheUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -54,10 +55,12 @@ public class CacheAspect {
         String value = "";
         try {
             key = getKey(anno, parameterTypes, arguments);
-            log.debug("redis get key : " + key);
-            value = cacheAPI.get(key);
-            Type returnType = method.getGenericReturnType();
-            result = getResult(anno, result, value, returnType);
+            if (!CacheUtil.isForceRefreshCache()){
+                log.debug("redis get key : " + key);
+                value = cacheAPI.get(key);
+                Type returnType = method.getGenericReturnType();
+                result = getResult(anno, result, value, returnType);
+            }
         } catch (Exception e) {
             log.error("获取缓存失败：" + key, e);
         } finally {
@@ -68,6 +71,7 @@ public class CacheAspect {
                     cacheAPI.set(key, result, anno.expire());
                 }
             }
+            CacheUtil.clear();
         }
         return result;
     }
