@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ace.cache.service.ICacheManager;
 import com.ace.cache.vo.CacheTree;
 
-@Controller
-@RequestMapping("cache")
+//@Controller
+//@RequestMapping("cache")
 public class CacheRest {
     @Autowired
     private ICacheManager cacheManager;
