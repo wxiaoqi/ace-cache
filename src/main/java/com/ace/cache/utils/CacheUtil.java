@@ -53,6 +53,9 @@ public class CacheUtil {
             }
             else {
                 String stack = getInvokeStackStr(2);
+                if(stack.startsWith("com.ace.cache.utils.CacheUtil.clear<-")){ //由clear()调用
+                    stack = stack.replaceFirst("com.ace.cache.utils.CacheUtil.clear<-","");
+                }
                 if(thisLockStack.equals(stack)){
                     FORCE_REFRESH.remove();
                     LOCK_STACK.remove();
@@ -67,6 +70,8 @@ public class CacheUtil {
     /////////////////
 
     public static void main(String[] args) {
+        String china = "今晚👌2打老虎";
+        System.out.println(china.substring(0,3));
         CacheUtil.setForceRefreshCache();
         CacheUtil.setForceRefreshCache();
 
