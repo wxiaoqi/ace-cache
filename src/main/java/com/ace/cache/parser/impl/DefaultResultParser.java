@@ -26,7 +26,12 @@ public class DefaultResultParser implements ICacheResultParser {
             if (((Class) rawType).isAssignableFrom(List.class)) {
 //                result = JSON.parseArray(value, (Class) parameterizedType.getActualTypeArguments()[0]);
                 //fix 多层泛型引起的bug
-                result = JSON.parseArray(value,parameterizedType.getActualTypeArguments());
+                if (parameterizedType.getActualTypeArguments()[0] instanceof ParameterizedType) {
+                    result = JSON.parseArray(value, parameterizedType.getActualTypeArguments());
+                }
+                else {
+                    result = JSON.parseArray(value, (Class) parameterizedType.getActualTypeArguments()[0]);
+                }
             }
         } else if (origins == null) {
             result = JSON.parseObject(value, (Class) type);

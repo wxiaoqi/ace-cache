@@ -32,12 +32,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @Slf4j
 public class CacheAspect {
-    @Autowired
-    private IKeyGenerator keyParser;
+
     @Autowired
     private CacheAPI cacheAPI;
-    private ConcurrentHashMap<String, ICacheResultParser> parserMap = new ConcurrentHashMap<String, ICacheResultParser>();
-    private ConcurrentHashMap<String, IKeyGenerator> generatorMap = new ConcurrentHashMap<String, IKeyGenerator>();
+    @Autowired
+    KeyGenerateService keyGenerateService;
+    @Autowired
+    ResultParseService resultParseService;
 
     @Pointcut("@annotation(com.ace.cache.annotation.Cache)")
     public void aspect() {
@@ -54,12 +55,12 @@ public class CacheAspect {
         String key = "";
         String value = "";
         try {
-            key = getKey(anno, parameterTypes, arguments);
+            key = keyGenerateService.getKey(anno, parameterTypes, arguments);
             if (!CacheUtil.isForceRefreshCache()){
                 log.debug("redis get key : " + key);
                 value = cacheAPI.get(key);
                 Type returnType = method.getGenericReturnType();
-                result = getResult(anno, result, value, returnType);
+                result = resultParseService.getResult(anno, value, returnType);
             }
         } catch (Exception e) {
             log.error("获取缓存失败：" + key, e);
@@ -76,69 +77,7 @@ public class CacheAspect {
         return result;
     }
 
-    /**
-     * 解析表达式
-     *
-     * @param anno
-     * @param parameterTypes
-     * @param arguments
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    private String getKey(Cache anno, Class<?>[] parameterTypes,
-                          Object[] arguments) throws InstantiationException,
-            IllegalAccessException {
-        String key;
-        String generatorClsName = anno.generator().getName();
-        IKeyGenerator keyGenerator = null;
-        if (anno.generator().equals(DefaultKeyGenerator.class)) {
-            keyGenerator = keyParser;
-        } else {
-            if (generatorMap.containsKey(generatorClsName)) {
-                keyGenerator = generatorMap.get(generatorClsName);
-            } else {
-                keyGenerator = anno.generator().newInstance();
-                generatorMap.put(generatorClsName, keyGenerator);
-            }
-        }
 
-        key = keyGenerator.getKey(anno.key(), anno.scope(), parameterTypes,
-                arguments);
-        return key;
-    }
 
-    /**
-     * 解析结果
-     *
-     * @param anno
-     * @param result
-     * @param value
-     * @param returnType
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    private Object getResult(Cache anno, Object result, String value,
-                             Type returnType) throws InstantiationException,
-            IllegalAccessException {
-        String parserClsName = anno.parser().getName();
-        ICacheResultParser parser = null;
-        if (parserMap.containsKey(parserClsName)) {
-            parser = parserMap.get(parserClsName);
-        } else {
-            parser = anno.parser().newInstance();
-            parserMap.put(parserClsName, parser);
-        }
-        if (parser != null) {
-            if (anno.result()[0].equals(Object.class)) {
-                result = parser.parse(value, returnType,
-                        null);
-            } else {
-                result = parser.parse(value, returnType,
-                        anno.result());
-            }
-        }
-        return result;
-    }
+
 }
