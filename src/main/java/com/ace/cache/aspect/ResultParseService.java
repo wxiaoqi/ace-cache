@@ -35,7 +35,10 @@ public class ResultParseService {
             parser = anno.parser().newInstance();
             parserMap.put(parserClsName, parser);
         }
-        if (parser != null) {
+        if (String.class.equals(returnType)){
+            return value;
+        }
+        else if (parser != null) {
             if (anno.result()[0].equals(Object.class)) {
                 result = parser.parse(value, returnType,
                         null);

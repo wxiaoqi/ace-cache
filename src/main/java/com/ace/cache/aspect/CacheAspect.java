@@ -59,8 +59,10 @@ public class CacheAspect {
             if (!CacheUtil.isForceRefreshCache()){
                 log.debug("redis get key : " + key);
                 value = cacheAPI.get(key);
-                Type returnType = method.getGenericReturnType();
-                result = resultParseService.getResult(anno, value, returnType);
+                if (null!= value) {
+                    Type returnType = method.getGenericReturnType();
+                    result = resultParseService.getResult(anno, value, returnType);
+                }
             }
         } catch (Exception e) {
             log.error("获取缓存失败：" + key, e);
