@@ -17,3 +17,4 @@ redis:
     sysName: ace
     enable: true
     database: 0
+    userkey:

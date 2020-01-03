@@ -1,14 +1,14 @@
 package com.ace.cache.test.service.impl;
 
+import com.ace.cache.annotation.Cache;
+import com.ace.cache.annotation.CacheClear;
 import com.ace.cache.parser.ICacheResultParser;
 import com.ace.cache.test.cache.MyKeyGenerator;
 import com.ace.cache.test.entity.User;
 import com.ace.cache.test.service.UserService;
-import com.ace.cache.annotation.Cache;
-import com.ace.cache.annotation.CacheClear;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -18,8 +18,8 @@ import java.util.*;
  * Created by Ace on 2017/5/21.
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
-    private Logger log = Logger.getLogger(UserServiceImpl.class);
 
     @Override
     @Cache(key = "user{1}")
@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cache(key = "user:list")
     public List<User> getLlist() {
+        System.out.println("从方法内读取....");
         log.debug("从方法内读取....");
         List<User> users = new ArrayList<User>();
         for (int i = 0; i < 20; i++) {

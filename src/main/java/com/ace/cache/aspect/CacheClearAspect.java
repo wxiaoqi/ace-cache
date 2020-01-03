@@ -1,15 +1,13 @@
 package com.ace.cache.aspect;
 
-import java.lang.reflect.Method;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.ace.cache.annotation.CacheClear;
 import com.ace.cache.api.CacheAPI;
+import com.ace.cache.config.RedisConfig;
 import com.ace.cache.constants.CacheScope;
 import com.ace.cache.parser.IKeyGenerator;
 import com.ace.cache.parser.impl.DefaultKeyGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,6 +15,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 清除缓存注解拦截
@@ -28,12 +32,15 @@ import org.springframework.stereotype.Service;
  */
 @Aspect
 @Service
+@Slf4j
 public class CacheClearAspect {
+    @Autowired
+    RedisConfig redisConfig;
+
     @Autowired
     private IKeyGenerator keyParser;
     @Autowired
     private CacheAPI cacheAPI;
-    protected Logger log = Logger.getLogger(this.getClass());
     private ConcurrentHashMap<String, IKeyGenerator> generatorMap = new ConcurrentHashMap<String, IKeyGenerator>();
 
     @Pointcut("@annotation(com.ace.cache.annotation.CacheClear)")
@@ -43,27 +50,75 @@ public class CacheClearAspect {
     @Around("aspect()&&@annotation(anno)")
     public Object interceptor(ProceedingJoinPoint invocation, CacheClear anno)
             throws Throwable {
+        Object result = invocation.proceed();
+        try{
+            clearCache(invocation, anno);
+        }
+        catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }
+        return result;
+    }
+
+    private void clearCache(ProceedingJoinPoint invocation, CacheClear anno) throws InstantiationException, IllegalAccessException {
         MethodSignature signature = (MethodSignature) invocation.getSignature();
         Method method = signature.getMethod();
         Class<?>[] parameterTypes = method.getParameterTypes();
         Object[] arguments = invocation.getArgs();
-        String key = "";
+        String key = null;
+        List<String> keyPres = null;
         if (StringUtils.isNotBlank(anno.key())) {
             key = getKey(anno, anno.key(), CacheScope.application,
                     parameterTypes, arguments);
+            log.debug("redis remove key : " + key);
             cacheAPI.remove(key);
         } else if (StringUtils.isNotBlank(anno.pre())) {
+            keyPres = new ArrayList<>();
             key = getKey(anno, anno.pre(), CacheScope.application,
                     parameterTypes, arguments);
+            keyPres.add(key);
+            log.debug("redis remove key pre : " + key);
             cacheAPI.removeByPre(key);
-        } else if (anno.keys().length > 1) {
+        } else if (anno.keys().length >= 1) {
+            keyPres = new ArrayList<>();
             for (String tmp : anno.keys()) {
                 tmp = getKey(anno, tmp, CacheScope.application, parameterTypes,
                         arguments);
+                keyPres.add(tmp);
+                log.debug("redis remove key pre : " + tmp);
                 cacheAPI.removeByPre(tmp);
             }
         }
-        return invocation.proceed();
+
+        // 延时删除
+        Long timeout = redisConfig.getRefreshTimeout();
+        if (timeout >0 ) {
+            final String fKey = key;
+            final List<String> fKeypre = new ArrayList<>();
+            fKeypre.addAll(keyPres);
+            CompletableFuture.runAsync(()->{
+                try{
+                    Thread.sleep(timeout);
+                }
+                catch (Exception e){
+                    log.debug(e.getMessage(),e);
+                }
+                log.debug("redis remove after "+ timeout + "ms :");
+                if (StringUtils.isNotBlank(fKey)) {
+                    log.debug("redis remove key : " + fKey);
+                    cacheAPI.remove(fKey);
+                }
+                if(null!= fKeypre && !fKeypre.isEmpty()){
+                    for (String tmp : fKeypre) {
+                        log.debug("redis remove key pre : " + tmp);
+                        cacheAPI.removeByPre(tmp);
+                    }
+                    fKeypre.clear();
+                }
+            });
+        }
+        key = null;
+        keyPres.clear();
     }
 
     /**

@@ -3,22 +3,20 @@
  */
 package com.ace.cache.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.ace.cache.api.CacheAPI;
 import com.ace.cache.config.RedisConfig;
+import com.ace.cache.entity.CacheBean;
+import com.ace.cache.service.ICacheManager;
+import com.ace.cache.vo.CacheTree;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.ace.cache.constants.CacheConstants;
-import com.ace.cache.entity.CacheBean;
-import com.ace.cache.service.ICacheManager;
-import com.ace.cache.vo.CacheTree;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 解决问题：
@@ -88,7 +86,7 @@ public class CacheManagerImpl implements ICacheManager {
     private List<CacheTree> toTree(List<CacheBean> caches) {
         List<CacheTree> result = new ArrayList<CacheTree>();
         Set<CacheTree> cts = new HashSet<CacheTree>();
-        CacheTree ct = new CacheTree();
+        CacheTree ct ;//= new CacheTree();
         for (CacheBean cache : caches) {
             String[] split = cache.getKey().split(":");
             for (int i = split.length - 1; i > 0; i--) {
