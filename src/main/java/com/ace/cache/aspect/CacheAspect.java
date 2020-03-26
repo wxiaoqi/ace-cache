@@ -1,13 +1,12 @@
 package com.ace.cache.aspect;
 
-import com.ace.cache.annotation.Cache;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.ace.cache.api.CacheAPI;
-import com.ace.cache.parser.ICacheResultParser;
-import com.ace.cache.parser.IKeyGenerator;
-import com.ace.cache.parser.impl.DefaultKeyGenerator;
-import com.ace.cache.utils.CacheUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,9 +15,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.concurrent.ConcurrentHashMap;
+import com.ace.cache.annotation.Cache;
+import com.ace.cache.parser.ICacheResultParser;
+import com.ace.cache.parser.IKeyGenerator;
+import com.ace.cache.parser.impl.DefaultKeyGenerator;
 
 /**
  * 缓存开启注解拦截
@@ -30,15 +30,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Aspect
 @Service
-@Slf4j
 public class CacheAspect {
-
+    @Autowired
+    private IKeyGenerator keyParser;
     @Autowired
     private CacheAPI cacheAPI;
-    @Autowired
-    KeyGenerateService keyGenerateService;
-    @Autowired
-    ResultParseService resultParseService;
+    protected Logger log = Logger.getLogger(this.getClass());
+    private ConcurrentHashMap<String, ICacheResultParser> parserMap = new ConcurrentHashMap<String, ICacheResultParser>();
+    private ConcurrentHashMap<String, IKeyGenerator> generatorMap = new ConcurrentHashMap<String, IKeyGenerator>();
 
     @Pointcut("@annotation(com.ace.cache.annotation.Cache)")
     public void aspect() {
@@ -55,31 +54,86 @@ public class CacheAspect {
         String key = "";
         String value = "";
         try {
-            key = keyGenerateService.getKey(anno, parameterTypes, arguments);
-            if (!CacheUtil.isForceRefreshCache()){
-                log.debug("redis get key : " + key);
-                value = cacheAPI.get(key);
-                if (null!= value) {
-                    Type returnType = method.getGenericReturnType();
-                    result = resultParseService.getResult(anno, value, returnType);
-                }
-            }
+            key = getKey(anno, parameterTypes, arguments);
+            value = cacheAPI.get(key);
+            Type returnType = method.getGenericReturnType();
+            result = getResult(anno, result, value, returnType);
         } catch (Exception e) {
             log.error("获取缓存失败：" + key, e);
         } finally {
             if (result == null) {
                 result = invocation.proceed();
                 if (StringUtils.isNotBlank(key)) {
-                    log.debug("redis set key : " + key);
                     cacheAPI.set(key, result, anno.expire());
                 }
             }
-            CacheUtil.clear();
         }
         return result;
     }
 
+    /**
+     * 解析表达式
+     *
+     * @param anno
+     * @param parameterTypes
+     * @param arguments
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private String getKey(Cache anno, Class<?>[] parameterTypes,
+                          Object[] arguments) throws InstantiationException,
+            IllegalAccessException {
+        String key;
+        String generatorClsName = anno.generator().getName();
+        IKeyGenerator keyGenerator = null;
+        if (anno.generator().equals(DefaultKeyGenerator.class)) {
+            keyGenerator = keyParser;
+        } else {
+            if (generatorMap.contains(generatorClsName)) {
+                keyGenerator = generatorMap.get(generatorClsName);
+            } else {
+                keyGenerator = anno.generator().newInstance();
+                generatorMap.put(generatorClsName, keyGenerator);
+            }
+        }
 
+        key = keyGenerator.getKey(anno.key(), anno.scope(), parameterTypes,
+                arguments);
+        return key;
+    }
 
-
+    /**
+     * 解析结果
+     *
+     * @param anno
+     * @param result
+     * @param value
+     * @param returnType
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private Object getResult(Cache anno, Object result, String value,
+                             Type returnType) throws InstantiationException,
+            IllegalAccessException {
+        String parserClsName = anno.parser().getName();
+        ICacheResultParser parser = null;
+        if (parserMap.containsKey(parserClsName)) {
+            parser = parserMap.get(parserClsName);
+        } else {
+            parser = anno.parser().newInstance();
+            parserMap.put(parserClsName, parser);
+        }
+        if (parser != null) {
+            if (anno.result()[0].equals(Object.class)) {
+                result = parser.parse(value, returnType,
+                        null);
+            } else {
+                result = parser.parse(value, returnType,
+                        anno.result());
+            }
+        }
+        return result;
+    }
 }
