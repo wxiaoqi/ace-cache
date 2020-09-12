@@ -2,6 +2,7 @@ package com.ace.cache.test.service.impl;
 
 import com.ace.cache.annotation.Cache;
 import com.ace.cache.annotation.CacheClear;
+import com.ace.cache.annotation.CacheGlobalLock;
 import com.ace.cache.parser.ICacheResultParser;
 import com.ace.cache.test.cache.MyKeyGenerator;
 import com.ace.cache.test.entity.User;
@@ -78,6 +79,12 @@ public class UserServiceImpl implements UserService {
         log.debug("从方法内读取....");
         User user = new User("Ace", age, "Ace");
         return user;
+    }
+
+    @Override
+    @CacheGlobalLock(key="user_lock{1}")
+    public void biz(String account) {
+        log.debug("注解分布式锁...");
     }
 
     /**

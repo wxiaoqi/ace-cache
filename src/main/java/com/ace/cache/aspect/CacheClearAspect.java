@@ -41,6 +41,7 @@ public class CacheClearAspect {
     private IKeyGenerator keyParser;
     @Autowired
     private CacheAPI cacheAPI;
+
     private ConcurrentHashMap<String, IKeyGenerator> generatorMap = new ConcurrentHashMap<String, IKeyGenerator>();
 
     @Pointcut("@annotation(com.ace.cache.annotation.CacheClear)")

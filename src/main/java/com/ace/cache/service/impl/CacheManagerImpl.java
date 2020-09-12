@@ -10,7 +10,6 @@ import com.ace.cache.service.ICacheManager;
 import com.ace.cache.vo.CacheTree;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,10 +27,10 @@ import java.util.Set;
  */
 @Service
 public class CacheManagerImpl implements ICacheManager {
-    @Autowired
-    private Environment env;
+
     @Autowired
     private CacheAPI cacheAPI;
+
     @Autowired
     private RedisConfig redisConfig;
     /**

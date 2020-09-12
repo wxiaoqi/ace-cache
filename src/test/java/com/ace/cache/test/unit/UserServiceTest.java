@@ -3,6 +3,7 @@ package com.ace.cache.test.unit;
 import com.ace.cache.test.CacheTest;
 import com.ace.cache.test.entity.User;
 import com.ace.cache.test.service.UserService;
+import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,11 @@ public class UserServiceTest {
 
     @Test
     public void testGetUser() {
-        userService.get("test");
-        userService.get("test");
+        User test = userService.get("test");
+        System.out.println(JSON.toJSONString(test));
+        test = userService.get("test");
+        System.out.println(JSON.toJSONString(test));
+
     }
 
     @Test

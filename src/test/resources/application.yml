@@ -1,8 +1,22 @@
 logging:
     level:
-        com.whb.cache: DEBUG
-#        org.springframework.core: DEBUG
+        com.ace.cache: DEBUG
+        org.springframework: DEBUG
     path: /log
+
+spring:
+  redis:
+    database: 0
+    host: localhost
+    timeout: 2000
+    sysName: ace
+    enable: true
+    userkey:
+    lettuce:
+      pool:
+        max-active: 300
+        min-idle: 100
+        max-wait: 1000
 
 #redis-cache 相关
 redis:
@@ -12,9 +26,8 @@ redis:
          maxWait: 1000
     host: 127.0.0.1
     port: 6379
-    password:
     timeout: 2000
     sysName: ace
-    enable: true
+    enable: false
     database: 0
     userkey:

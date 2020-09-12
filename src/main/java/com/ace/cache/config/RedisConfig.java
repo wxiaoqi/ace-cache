@@ -2,25 +2,11 @@ package com.ace.cache.config;
 
 import com.ace.cache.utils.PropertiesLoaderUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 import javax.annotation.PostConstruct;
 
-@Configuration
 public class RedisConfig {
-    @Autowired
-    private Environment env;
-    private JedisPool pool;
-    private String maxActive;
-    private String maxIdle;
-    private String maxWait;
+    private RedisPoolConfig pool = new RedisPoolConfig();
     private String host;
     private String password;
     private String timeout;
@@ -28,107 +14,56 @@ public class RedisConfig {
     private String port;
     private String enable;
     private String sysName;
-
-
     private String userKey;
-
     private Long refreshTimeout;
 
 
     @PostConstruct
-    public void  init(){
+    public void init() {
         PropertiesLoaderUtils prop = new PropertiesLoaderUtils("application.properties");
-        host = prop.getProperty("redis.host");
-        if(StringUtils.isBlank(host)){
-            host = env.getProperty("redis.host");
-            maxActive = env.getProperty("redis.pool.maxActive");
-            maxIdle  = env.getProperty("redis.pool.maxIdle");
-            maxWait = env.getProperty("redis.pool.maxWait");
-            password = env.getProperty("redis.password");
-            timeout = env.getProperty("redis.timeout");
-            database = env.getProperty("redis.database");
-            port = env.getProperty("redis.port");
-            sysName = env.getProperty("redis.sysName");
-            enable = env.getProperty("redis.enable");
-        } else{
-            maxActive = prop.getProperty("redis.pool.maxActive");
-            maxIdle  = prop.getProperty("redis.pool.maxIdle");
-            maxWait = prop.getProperty("redis.pool.maxWait");
+        if (!StringUtils.isBlank(prop.getProperty("redis.host"))) {
+            host = prop.getProperty("redis.host");
+            pool.setMaxActive(prop.getProperty("redis.pool.maxActive"));
+            pool.setMaxIdle(prop.getProperty("redis.pool.maxIdle"));
+            pool.setMaxWait(prop.getProperty("redis.pool.maxWait"));
             password = prop.getProperty("redis.password");
             timeout = prop.getProperty("redis.timeout");
             database = prop.getProperty("redis.database");
             port = prop.getProperty("redis.port");
             sysName = prop.getProperty("redis.sysName");
             enable = prop.getProperty("redis.enable");
-        }
-        userKey= prop.getProperty("redis.userkey");
-
-        String refreshTimeoutStr = env.getProperty("redis.cache.refreshTimeout");
-        if (StringUtils.isBlank(refreshTimeoutStr)){
-            refreshTimeoutStr = prop.getProperty("redis.cache.refreshTimeout");
-        }
-        if (StringUtils.isNotBlank(refreshTimeoutStr)){
-            refreshTimeout = Long.parseLong(refreshTimeoutStr.trim());
-        }
-        else {
-            refreshTimeout = 0L;
-        }
-    }
-
-    @Bean
-    public JedisPoolConfig constructJedisPoolConfig() {
-        JedisPoolConfig config = new JedisPoolConfig();
-        // 控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；
-        // 如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)。
-        config.setMaxTotal(Integer.parseInt(maxActive));
-        // 控制一个pool最多有多少个状态为idle(空闲的)的jedis实例。
-        config.setMaxIdle(Integer.parseInt(maxIdle));
-        // 表示当borrow(引入)一个jedis实例时，最大的等待时间，如果超过等待时间，则直接抛出JedisConnectionException；
-        config.setMaxWaitMillis(Integer.parseInt(maxWait));
-        config.setTestOnBorrow(true);
-
-        return config;
-    }
-
-    @Bean(name = "pool")
-    public JedisPool constructJedisPool() {
-        String ip = this.host;
-        int port = Integer.parseInt(this.port);
-        String password = this.password;
-        int timeout = Integer.parseInt(this.timeout);
-        int database = Integer.parseInt(this.database);
-        if (null == pool) {
-            if (StringUtils.isBlank(password)) {
-                pool = new JedisPool(constructJedisPoolConfig(), ip, port, timeout);
+            String refreshTimeoutStr = prop.getProperty("redis.cache.refreshTimeout");
+            if (StringUtils.isNotBlank(refreshTimeoutStr)) {
+                refreshTimeout = Long.parseLong(refreshTimeoutStr.trim());
             } else {
-                pool = new JedisPool(constructJedisPoolConfig(), ip, port, timeout, password, database);
+                refreshTimeout = 0L;
             }
+            userKey = prop.getProperty("redis.userkey");
+
         }
+    }
+
+    public String addSys(String key) {
+        String result = key;
+        String sys = this.getSysName();
+        if (key.startsWith(sys))
+            result = key;
+        else
+            result = sys + ":" + key;
+        return result;
+    }
+
+
+    public RedisPoolConfig getPool() {
         return pool;
     }
 
-    public String getMaxActive() {
-        return maxActive;
+    public void setPool(RedisPoolConfig pool) {
+        this.pool = pool;
     }
 
-    public void setMaxActive(String maxActive) {
-        this.maxActive = maxActive;
-    }
-
-    public String getMaxIdle() {
-        return maxIdle;
-    }
-
-    public void setMaxIdle(String maxIdle) {
-        this.maxIdle = maxIdle;
-    }
-
-    public String getMaxWait() {
-        return maxWait;
-    }
-
-    public void setMaxWait(String maxWait) {
-        this.maxWait = maxWait;
+    public void setRefreshTimeout(Long refreshTimeout) {
+        this.refreshTimeout = refreshTimeout;
     }
 
     public String getHost() {
@@ -194,7 +129,8 @@ public class RedisConfig {
     public void setUserKey(String userKey) {
         this.userKey = userKey;
     }
-    public Long getRefreshTimeout(){
+
+    public Long getRefreshTimeout() {
         return this.refreshTimeout;
     }
 }

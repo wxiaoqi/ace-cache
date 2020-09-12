@@ -1,23 +1,16 @@
 package com.ace.cache.api.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import com.ace.cache.api.CacheAPI;
 import com.ace.cache.config.RedisConfig;
 import com.ace.cache.constants.CacheConstants;
 import com.ace.cache.entity.CacheBean;
+import com.ace.cache.service.IRedisService;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.ace.cache.service.IRedisService;
+import java.util.*;
 
 /**
  * redis缓存
@@ -29,7 +22,7 @@ import com.ace.cache.service.IRedisService;
  * @date 2017年5月4日
  * @since 1.7
  */
-@Service
+
 public class CacheRedis implements CacheAPI {
     @Autowired
     private RedisConfig redisConfig;
@@ -46,7 +39,7 @@ public class CacheRedis implements CacheAPI {
         }
         CacheBean cache = getCacheBean(key);
         if (cache != null) {
-            if (cache.getExpireTime().getTime() > new Date().getTime()) {
+            if (cache.getExpireTime().getTime() > System.currentTimeMillis()) {
                 return redisCacheService.get(cache.getKey());
             } else {
                 redisCacheService.del(addSys(key));
@@ -173,7 +166,7 @@ public class CacheRedis implements CacheAPI {
 
     @Override
     public List<CacheBean> listAll() {
-        Set<String> result = redisCacheService.getByPre(addSys(""));
+        Set<String> result = redisCacheService.getByPre(redisConfig.addSys(""));
         List<CacheBean> caches = new ArrayList<CacheBean>();
         if (result == null)
             return caches;

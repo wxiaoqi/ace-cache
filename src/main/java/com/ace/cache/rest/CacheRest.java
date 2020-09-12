@@ -1,10 +1,8 @@
 package com.ace.cache.rest;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.ace.cache.service.ICacheManager;
 import com.ace.cache.utils.TreeUtils;
+import com.ace.cache.vo.CacheTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ace.cache.service.ICacheManager;
-import com.ace.cache.vo.CacheTree;
+import java.util.List;
 
-//@Controller
-//@RequestMapping("cache")
+@Controller
+@RequestMapping("cache")
 public class CacheRest {
     @Autowired
     private ICacheManager cacheManager;
@@ -63,8 +60,4 @@ public class CacheRest {
         cacheManager.update(key, hour);
     }
 
-    @RequestMapping("")
-    public String index() {
-        return "/static/cache/index.html";
-    }
 }

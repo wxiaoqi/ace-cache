@@ -24,7 +24,6 @@ public class DefaultResultParser implements ICacheResultParser {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             Type rawType = parameterizedType.getRawType();
             if (((Class) rawType).isAssignableFrom(List.class)) {
-//                result = JSON.parseArray(value, (Class) parameterizedType.getActualTypeArguments()[0]);
                 //fix 多层泛型引起的bug
                 if (parameterizedType.getActualTypeArguments()[0] instanceof ParameterizedType) {
                     result = JSON.parseArray(value, parameterizedType.getActualTypeArguments());
