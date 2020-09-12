@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 清除缓存注解拦截
  *
- * @author wanghaobin
+ * @author 小郎君
  * @description
  * @date 2017年5月18日
  * @since 1.7

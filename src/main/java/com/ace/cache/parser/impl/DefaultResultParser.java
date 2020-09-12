@@ -10,7 +10,7 @@ import com.ace.cache.parser.ICacheResultParser;
 /**
  * 默认缓存结果解析类
  *
- * @author wanghaobin
+ * @author 小郎君
  * @description
  * @date 2017年5月18日
  * @since 1.7

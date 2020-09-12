@@ -2,9 +2,6 @@ package com.ace.cache.aspect;
 
 import com.ace.cache.annotation.Cache;
 import com.ace.cache.api.CacheAPI;
-import com.ace.cache.parser.ICacheResultParser;
-import com.ace.cache.parser.IKeyGenerator;
-import com.ace.cache.parser.impl.DefaultKeyGenerator;
 import com.ace.cache.utils.CacheUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,12 +15,11 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 缓存开启注解拦截
  *
- * @author wanghaobin
+ * @author 小郎君
  * @description
  * @date 2017年5月18日
  * @since 1.7

@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author wanghaobin
+ * @author 小郎君
  * @create 2020/9/11.
  */
 public class BootRedisServiceImpl implements IRedisService {

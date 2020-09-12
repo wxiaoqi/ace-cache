@@ -7,7 +7,7 @@ import com.ace.cache.parser.IUserKeyGenerator;
 /**
  * ${DESCRIPTION}
  *
- * @author wanghaobin
+ * @author 小郎君
  * @create 2017-05-22 14:05
  */
 public class MyKeyGenerator extends IKeyGenerator {
