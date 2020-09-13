@@ -24,4 +24,8 @@ public interface UserService {
     User get(int age);
 
     void biz(String account);
+
+    int getAge(String account);
+
+    String getName(String account);
 }

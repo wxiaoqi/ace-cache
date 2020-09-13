@@ -1,7 +1,7 @@
 logging:
     level:
         com.ace.cache: DEBUG
-        org.springframework: DEBUG
+#        org.springframework: DEBUG
     path: /log
 
 spring:

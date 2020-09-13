@@ -23,7 +23,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     @Override
-    @Cache(key = "user{1}")
+    @Cache(key = "user{1}",desc = "用户信息缓存")
     public User get(String account) {
         log.debug("从方法内读取....");
         User user = new User("Ace", 24, account);
@@ -87,6 +87,19 @@ public class UserServiceImpl implements UserService {
         log.debug("注解分布式锁...");
     }
 
+    @Override
+    @Cache(key="user:age{1}")
+    public int getAge(String account) {
+        log.debug("从方法内读取....");
+        return 11;
+    }
+
+    @Override
+    @Cache(key="user:name{1}")
+    public String getName(String account) {
+        log.debug("从方法内读取....");
+        return "小郎君";
+    }
     /**
      * 对map返回结果做处理
      *

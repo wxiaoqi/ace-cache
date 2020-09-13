@@ -32,13 +32,13 @@ public class BootRedisServiceImpl implements IRedisService {
     @Override
     public String set(String key, String value) {
         redisTemplate.opsForValue().set(key, value);
-        return "1";
+        return "OK";
     }
 
     @Override
     public String set(String key, String value, int expire) {
         redisTemplate.opsForValue().set(key, value, expire, TimeUnit.MINUTES);
-        return "1";
+        return "OK";
     }
 
     @Override
@@ -386,7 +386,7 @@ public class BootRedisServiceImpl implements IRedisService {
 
     @Override
     public String type(String key) {
-        return null;
+        return redisTemplate.type(key).code();
     }
 
     @Override

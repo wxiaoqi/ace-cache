@@ -20,6 +20,20 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
+    public void testGetAge(){
+        userService.getAge("test");
+        userService.getAge("test");
+    }
+
+    @Test
+    public void testGetName(){
+        String test = userService.getName("test");
+        System.out.println(test);
+        test = userService.getName("test");
+        System.out.println(test);
+    }
+
+    @Test
     public void testGetUser() {
         User test = userService.get("test");
         System.out.println(JSON.toJSONString(test));

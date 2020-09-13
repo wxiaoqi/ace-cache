@@ -1,11 +1,11 @@
 package com.ace.cache.service;
 
+import redis.clients.jedis.BinaryClient.LIST_POSITION;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import redis.clients.jedis.BinaryClient.LIST_POSITION;
 
 public interface IRedisService {
 
@@ -68,7 +68,7 @@ public interface IRedisService {
      * 根据前缀移除key
      * </p>
      *
-     * @param keys 一个key 也可以使 string 数组
+     * @param key 一个key 也可以使 string 数组
      * @return 返回删除成功的个数
      */
     Long delPre(String key);
@@ -113,6 +113,7 @@ public interface IRedisService {
      * @param value
      * @return 成功返回1 如果存在 和 发生异常 返回 0
      */
+    @Deprecated
     Long setnx(String key, String value);
 
     /**
@@ -125,6 +126,7 @@ public interface IRedisService {
      * @param seconds 单位:秒
      * @return 成功返回OK 失败和异常返回null
      */
+    @Deprecated
     String setex(String key, String value, int seconds);
 
     /**
@@ -158,6 +160,7 @@ public interface IRedisService {
      * @param offset 下标位置
      * @return 返回替换后 value 的长度
      */
+    @Deprecated
     Long setrange(String key, String str, int offset);
 
     /**
@@ -168,6 +171,7 @@ public interface IRedisService {
      * @param keys string数组 也可以是一个key
      * @return 成功返回value的集合, 失败返回null的集合 ,异常返回空
      */
+    @Deprecated
     List<String> mget(String... keys);
 
     /**
@@ -184,6 +188,7 @@ public interface IRedisService {
      * @param keysvalues
      * @return 成功返回OK 失败 异常 返回 null
      */
+    @Deprecated
     String mset(String... keysvalues);
 
     /**
@@ -200,6 +205,7 @@ public interface IRedisService {
      * @param keysvalues
      * @return 成功返回1 失败返回0
      */
+    @Deprecated
     Long msetnx(String... keysvalues);
 
     /**
@@ -211,6 +217,7 @@ public interface IRedisService {
      * @param value
      * @return 旧值 如果key不存在 则返回null
      */
+    @Deprecated
     String getset(String key, String value);
 
     /**
@@ -223,6 +230,7 @@ public interface IRedisService {
      * @param endOffset
      * @return 如果没有返回null
      */
+    @Deprecated
     String getrange(String key, int startOffset, int endOffset);
 
     /**
@@ -233,6 +241,7 @@ public interface IRedisService {
      * @param key
      * @return 加值后的结果
      */
+    @Deprecated
     Long incr(String key);
 
     /**
@@ -244,6 +253,7 @@ public interface IRedisService {
      * @param integer
      * @return
      */
+    @Deprecated
     Long incrBy(String key, Long integer);
 
     /**
@@ -254,6 +264,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     Long decr(String key);
 
     /**
@@ -265,6 +276,7 @@ public interface IRedisService {
      * @param integer
      * @return
      */
+    @Deprecated
     Long decrBy(String key, Long integer);
 
     /**
@@ -275,6 +287,7 @@ public interface IRedisService {
      * @param key
      * @return 失败返回null
      */
+    @Deprecated
     Long serlen(String key);
 
     /**
@@ -287,6 +300,7 @@ public interface IRedisService {
      * @param value
      * @return 如果存在返回0 异常返回null
      */
+    @Deprecated
     Long hset(String key, String field, String value);
 
     /**
@@ -299,6 +313,7 @@ public interface IRedisService {
      * @param value
      * @return
      */
+    @Deprecated
     Long hsetnx(String key, String field, String value);
 
     /**
@@ -310,6 +325,7 @@ public interface IRedisService {
      * @param hash
      * @return 返回OK 异常返回null
      */
+    @Deprecated
     String hmset(String key, Map<String, String> hash);
 
     /**
@@ -321,6 +337,7 @@ public interface IRedisService {
      * @param field
      * @return 没有返回null
      */
+    @Deprecated
     String hget(String key, String field);
 
     /**
@@ -332,6 +349,7 @@ public interface IRedisService {
      * @param fields 可以使 一个String 也可以是 String数组
      * @return
      */
+    @Deprecated
     List<String> hmget(String key, String... fields);
 
     /**
@@ -344,6 +362,7 @@ public interface IRedisService {
      * @param value
      * @return
      */
+    @Deprecated
     Long hincrby(String key, String field, Long value);
 
     /**
@@ -355,6 +374,7 @@ public interface IRedisService {
      * @param field
      * @return
      */
+    @Deprecated
     Boolean hexists(String key, String field);
 
     /**
@@ -365,6 +385,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     Long hlen(String key);
 
     /**
@@ -376,6 +397,7 @@ public interface IRedisService {
      * @param fields 可以是 一个 field 也可以是 一个数组
      * @return
      */
+    @Deprecated
     Long hdel(String key, String... fields);
 
     /**
@@ -386,6 +408,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     Set<String> hkeys(String key);
 
     /**
@@ -396,6 +419,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     List<String> hvals(String key);
 
     /**
@@ -406,6 +430,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     Map<String, String> hgetall(String key);
 
     /**
@@ -417,6 +442,7 @@ public interface IRedisService {
      * @param strs 可以使一个string 也可以使string数组
      * @return 返回list的value个数
      */
+    @Deprecated
     Long lpush(String key, String... strs);
 
     /**
@@ -428,6 +454,7 @@ public interface IRedisService {
      * @param strs 可以使一个string 也可以使string数组
      * @return 返回list的value个数
      */
+    @Deprecated
     Long rpush(String key, String... strs);
 
     /**
@@ -441,6 +468,7 @@ public interface IRedisService {
      * @param value 添加的value
      * @return
      */
+    @Deprecated
     Long linsert(String key, LIST_POSITION where, String pivot, String value);
 
     /**
@@ -456,6 +484,7 @@ public interface IRedisService {
      * @param value
      * @return 成功返回OK
      */
+    @Deprecated
     String lset(String key, Long index, String value);
 
     /**
@@ -468,6 +497,7 @@ public interface IRedisService {
      * @param value
      * @return 返回被删除的个数
      */
+    @Deprecated
     Long lrem(String key, long count, String value);
 
     /**
@@ -480,6 +510,7 @@ public interface IRedisService {
      * @param end
      * @return 成功返回OK
      */
+    @Deprecated
     String ltrim(String key, long start, long end);
 
     /**
@@ -490,6 +521,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     String lpop(String key);
 
     /**
@@ -500,6 +532,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     String rpop(String key);
 
     /**
@@ -514,6 +547,7 @@ public interface IRedisService {
      * @param dstkey
      * @return
      */
+    @Deprecated
     String rpoplpush(String srckey, String dstkey);
 
     /**
@@ -525,6 +559,7 @@ public interface IRedisService {
      * @param index
      * @return 如果没有返回null
      */
+    @Deprecated
     String lindex(String key, long index);
 
     /**
@@ -535,6 +570,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     Long llen(String key);
 
     /**
@@ -550,6 +586,7 @@ public interface IRedisService {
      * @param end
      * @return
      */
+    @Deprecated
     List<String> lrange(String key, long start, long end);
 
     /**
@@ -561,6 +598,7 @@ public interface IRedisService {
      * @param members 可以是一个String 也可以是一个String数组
      * @return 添加成功的个数
      */
+    @Deprecated
     Long sadd(String key, String... members);
 
     /**
@@ -572,6 +610,7 @@ public interface IRedisService {
      * @param members 可以是一个String 也可以是一个String数组
      * @return 删除的个数
      */
+    @Deprecated
     Long srem(String key, String... members);
 
     /**
@@ -582,6 +621,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     String spop(String key);
 
     /**
@@ -595,6 +635,7 @@ public interface IRedisService {
      * @param keys 可以使一个string 则返回set中所有的value 也可以是string数组
      * @return
      */
+    @Deprecated
     Set<String> sdiff(String... keys);
 
     /**
@@ -606,9 +647,10 @@ public interface IRedisService {
      * </p>
      *
      * @param dstkey 差集存入的key
-     * @param keys   可以使一个string 则返回set中所有的value 也可以是string数组
+     * @param keys 可以使一个string 则返回set中所有的value 也可以是string数组
      * @return
      */
+    @Deprecated
     Long sdiffstore(String dstkey, String... keys);
 
     /**
@@ -619,6 +661,7 @@ public interface IRedisService {
      * @param keys 可以使一个string 也可以是一个string数组
      * @return
      */
+    @Deprecated
     Set<String> sinter(String... keys);
 
     /**
@@ -627,9 +670,10 @@ public interface IRedisService {
      * </p>
      *
      * @param dstkey
-     * @param keys   可以使一个string 也可以是一个string数组
+     * @param keys 可以使一个string 也可以是一个string数组
      * @return
      */
+    @Deprecated
     Long sinterstore(String dstkey, String... keys);
 
     /**
@@ -640,6 +684,7 @@ public interface IRedisService {
      * @param keys 可以使一个string 也可以是一个string数组
      * @return
      */
+    @Deprecated
     Set<String> sunion(String... keys);
 
     /**
@@ -648,9 +693,10 @@ public interface IRedisService {
      * </p>
      *
      * @param dstkey
-     * @param keys   可以使一个string 也可以是一个string数组
+     * @param keys 可以使一个string 也可以是一个string数组
      * @return
      */
+    @Deprecated
     Long sunionstore(String dstkey, String... keys);
 
     /**
@@ -663,6 +709,7 @@ public interface IRedisService {
      * @param member set中的value
      * @return
      */
+    @Deprecated
     Long smove(String srckey, String dstkey, String member);
 
     /**
@@ -673,6 +720,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     Long scard(String key);
 
     /**
@@ -684,6 +732,7 @@ public interface IRedisService {
      * @param member
      * @return
      */
+    @Deprecated
     Boolean sismember(String key, String member);
 
     /**
@@ -694,6 +743,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     String srandmember(String key);
 
     /**
@@ -704,6 +754,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     Set<String> smembers(String key);
 
     /**
@@ -719,6 +770,7 @@ public interface IRedisService {
      * @param member
      * @return
      */
+    @Deprecated
     Long zadd(String key, double score, String member);
 
     /**
@@ -730,6 +782,7 @@ public interface IRedisService {
      * @param members 可以使一个string 也可以是一个string数组
      * @return
      */
+    @Deprecated
     Long zrem(String key, String... members);
 
     /**
@@ -742,6 +795,7 @@ public interface IRedisService {
      * @param member
      * @return
      */
+    @Deprecated
     Double zincrby(String key, double score, String member);
 
     /**
@@ -756,6 +810,7 @@ public interface IRedisService {
      * @param member
      * @return
      */
+    @Deprecated
     Long zrank(String key, String member);
 
     /**
@@ -770,6 +825,7 @@ public interface IRedisService {
      * @param member
      * @return
      */
+    @Deprecated
     Long zrevrank(String key, String member);
 
     /**
@@ -788,6 +844,7 @@ public interface IRedisService {
      * @param end
      * @return
      */
+    @Deprecated
     Set<String> zrevrange(String key, long start, long end);
 
     /**
@@ -800,6 +857,7 @@ public interface IRedisService {
      * @param min
      * @return
      */
+    @Deprecated
     Set<String> zrangebyscore(String key, String max, String min);
 
     /**
@@ -812,6 +870,7 @@ public interface IRedisService {
      * @param min
      * @return
      */
+    @Deprecated
     Set<String> zrangeByScore(String key, double max, double min);
 
     /**
@@ -824,6 +883,7 @@ public interface IRedisService {
      * @param max
      * @return
      */
+    @Deprecated
     Long zcount(String key, String min, String max);
 
     /**
@@ -834,6 +894,7 @@ public interface IRedisService {
      * @param key
      * @return
      */
+    @Deprecated
     Long zcard(String key);
 
     /**
@@ -845,6 +906,7 @@ public interface IRedisService {
      * @param member
      * @return
      */
+    @Deprecated
     Double zscore(String key, String member);
 
     /**
@@ -857,6 +919,7 @@ public interface IRedisService {
      * @param end
      * @return
      */
+    @Deprecated
     Long zremrangeByRank(String key, long start, long end);
 
     /**
@@ -869,6 +932,7 @@ public interface IRedisService {
      * @param end
      * @return
      */
+    @Deprecated
     Long zremrangeByScore(String key, double start, double end);
 
     /**
