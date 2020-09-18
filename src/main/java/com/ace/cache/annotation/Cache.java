@@ -1,15 +1,12 @@
 package com.ace.cache.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import com.ace.cache.constants.CacheScope;
 import com.ace.cache.parser.ICacheResultParser;
 import com.ace.cache.parser.IKeyGenerator;
 import com.ace.cache.parser.impl.DefaultKeyGenerator;
 import com.ace.cache.parser.impl.DefaultResultParser;
+
+import java.lang.annotation.*;
 
 /**
  * 开启缓存
@@ -24,6 +21,7 @@ import com.ace.cache.parser.impl.DefaultResultParser;
 @Retention(RetentionPolicy.RUNTIME)
 // 在运行时可以获取
 @Target(value = {ElementType.METHOD, ElementType.TYPE})
+@Documented
 // 作用到类，方法，接口上等
 public @interface Cache {
     /**

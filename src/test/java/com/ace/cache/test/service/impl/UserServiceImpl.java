@@ -10,6 +10,7 @@ import com.ace.cache.test.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
     @Cache(key = "user{1}",desc = "用户信息缓存")
     public User get(String account) {
         log.debug("从方法内读取....");
+        ((UserService) AopContext.currentProxy()).getAge(account);
         User user = new User("Ace", 24, account);
         return user;
     }

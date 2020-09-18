@@ -27,19 +27,19 @@ import redis.clients.jedis.JedisPoolConfig;
  * @create 2017/11/17.
  */
 @ComponentScan({"com.ace.cache"})
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(exposeProxy = true)
 public class AutoConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "spring.redis")
-    @ConditionalOnProperty(name = "spring.redis.enable",havingValue = "true")
+    @ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
     public RedisConfig constructBootRedisConfig() {
         RedisConfig redisConfig = new RedisConfig();
         return redisConfig;
     }
 
     @Bean
-    @ConditionalOnProperty(name = "spring.redis.enable",havingValue = "true")
+    @ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -70,7 +70,7 @@ public class AutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "spring.redis.enable",havingValue = "true")
+    @ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
     public BootRedisServiceImpl constructBootRedisServiceImpl() {
         return new BootRedisServiceImpl();
     }

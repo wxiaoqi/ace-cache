@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.wxiaoqi</groupId>
     <artifactId>ace-cache</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>ace-cache</name>
     <url>https://github.com/wxiaoqi/ace-cache</url>
     <licenses>

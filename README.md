@@ -10,7 +10,7 @@ ace-cache可以快速用于日常的spring boot应用之中。<br>
 <dependency>
     <groupId>com.github.wxiaoqi</groupId>
     <artifactId>ace-cache</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 ## 缓存配置
